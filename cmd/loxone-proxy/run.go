@@ -19,7 +19,14 @@ func run(ctx *cli.Context) error {
 	go appShutdownOnCtxCancel(ctx.Context, webApp)
 	webApp.Use(logger.New(), etag.New(), compress.New())
 
-	setupRoutes(webApp)
+	mc, err := newMatterController([]device{sittingRoomLight01})
+	if err != nil {
+		return err
+	}
+	defer mc.close()
+
+	r := &routes{webApp: webApp, mc: mc}
+	r.setup()
 
 	port := ctx.Int("port")
 	hostname := ctx.String("hostname")

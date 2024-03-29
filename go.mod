@@ -5,6 +5,7 @@ go 1.21.1
 require (
 	github.com/gofiber/fiber/v2 v2.52.3
 	github.com/rs/zerolog v1.32.0
+	github.com/tom-code/gomat v0.0.0-20231210134906-5413b3e13054
 	github.com/urfave/cli/v2 v2.27.1
 )
 
@@ -22,5 +23,6 @@ require (
 	github.com/valyala/fasthttp v1.51.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
 )

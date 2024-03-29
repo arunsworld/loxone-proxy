@@ -7,19 +7,32 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func setupRoutes(webApp *fiber.App) {
-	webApp.Post("/ON", lightsOn)
-	webApp.Post("/OFF", lightsOff)
+type routes struct {
+	webApp *fiber.App
+	mc     *matterController
 }
 
-func lightsOff(c *fiber.Ctx) error {
+func (r *routes) setup() {
+	r.webApp.Post("/ON", r.lightsOn)
+	r.webApp.Post("/OFF", r.lightsOff)
+}
+
+func (r *routes) lightsOff(c *fiber.Ctx) error {
 	room := string(c.Body())
 	log.Info().Str("room", room).Msg("lights off...")
+	switch room {
+	case "sittingRoom":
+		r.mc.switchLightsOff(sittingRoomLight01)
+	}
 	return c.Status(http.StatusOK).Send([]byte("OK"))
 }
 
-func lightsOn(c *fiber.Ctx) error {
+func (r *routes) lightsOn(c *fiber.Ctx) error {
 	room := string(c.Body())
 	log.Info().Str("room", room).Msg("lights on...")
+	switch room {
+	case "sittingRoom":
+		r.mc.switchLightsOn(sittingRoomLight01)
+	}
 	return c.Status(http.StatusOK).Send([]byte("OK"))
 }

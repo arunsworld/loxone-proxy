@@ -12,10 +12,13 @@ import (
 	"github.com/tom-code/gomat/symbols"
 )
 
+const defaultMatterPort = 5540
+
 type device struct {
 	name     string
 	deviceID uint64
 	deviceIP string
+	port     int // typically 5540 (udp port)
 }
 
 type job struct {
@@ -95,7 +98,11 @@ func (mc *matterController) setupDevice(d device) error {
 	}
 	mc.mu.RUnlock()
 
-	secureChannel, err := gomat.StartSecureChannel(net.ParseIP(d.deviceIP), 5540, 0)
+	port := d.port
+	if port == 0 {
+		port = defaultMatterPort
+	}
+	secureChannel, err := gomat.StartSecureChannel(net.ParseIP(d.deviceIP), port, 0)
 	if err != nil {
 		return fmt.Errorf("unable to start secure channel for %s to %s: %w", d.name, d.deviceIP, err)
 	}

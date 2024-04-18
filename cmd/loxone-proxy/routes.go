@@ -10,6 +10,7 @@ import (
 type routes struct {
 	webApp *fiber.App
 	mc     *matterController
+	pc     *pushoverController
 }
 
 func (r *routes) setup() {
@@ -33,6 +34,9 @@ func (r *routes) lightsOff(c *fiber.Ctx) error {
 	switch room {
 	case "sittingRoom":
 		r.mc.switchLightsOff(sittingRoomLight01)
+		// r.pc.send("Sitting room lights turned off")
+	case "doorbellChime":
+		r.mc.switchLightsOff(doorbellChime)
 	}
 	return c.Status(http.StatusOK).Send([]byte("OK"))
 }
@@ -43,36 +47,46 @@ func (r *routes) lightsOn(c *fiber.Ctx) error {
 	switch room {
 	case "sittingRoom":
 		r.mc.switchLightsOn(sittingRoomLight01)
+		// r.pc.send("Sitting room lights turned on")
+	case "doorbellChime":
+		r.mc.switchLightsOn(doorbellChime)
+		r.pc.send("Someone rang the doorbell")
 	}
 	return c.Status(http.StatusOK).Send([]byte("OK"))
 }
 
 func (r *routes) boilerOn(c *fiber.Ctx) error {
 	log.Info().Msg("boiler is triggered on...")
+	r.pc.send("Boiler has turned on")
 	return c.Status(http.StatusOK).Send([]byte("OK"))
 }
 
 func (r *routes) boilerOff(c *fiber.Ctx) error {
 	log.Info().Msg("boiler is triggered off...")
+	r.pc.send("Boiler has turned off")
 	return c.Status(http.StatusOK).Send([]byte("OK"))
 }
 
 func (r *routes) burglarAlarmArmed(c *fiber.Ctx) error {
 	log.Info().Msg("burglar alarm is armed...")
+	r.pc.send("Burglar alarm armed")
 	return c.Status(http.StatusOK).Send([]byte("OK"))
 }
 
 func (r *routes) burglarAlarmDisarmed(c *fiber.Ctx) error {
 	log.Info().Msg("burglar alarm is disarmed...")
+	r.pc.send("Burglar alarm disarmed")
 	return c.Status(http.StatusOK).Send([]byte("OK"))
 }
 
 func (r *routes) burglarAlarmTriggered(c *fiber.Ctx) error {
 	log.Info().Msg("burglar alarm has triggered...")
+	r.pc.send("Burglar alarm triggered")
 	return c.Status(http.StatusOK).Send([]byte("OK"))
 }
 
 func (r *routes) burglarAlarmDiffused(c *fiber.Ctx) error {
 	log.Info().Msg("burglar alarm diffused...")
+	r.pc.send("Burglar alarm diffused")
 	return c.Status(http.StatusOK).Send([]byte("OK"))
 }

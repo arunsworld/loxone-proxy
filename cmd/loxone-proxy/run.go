@@ -3,11 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/etag"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/joho/godotenv"
 	"github.com/rs/zerolog/log"
 	"github.com/urfave/cli/v2"
 )
@@ -19,13 +21,22 @@ func run(ctx *cli.Context) error {
 	go appShutdownOnCtxCancel(ctx.Context, webApp)
 	webApp.Use(logger.New(), etag.New(), compress.New())
 
-	mc, err := newMatterController([]device{sittingRoomLight01})
+	mc, err := newMatterController([]device{sittingRoomLight01, doorbellChime})
 	if err != nil {
 		return err
 	}
 	defer mc.close()
 
-	r := &routes{webApp: webApp, mc: mc}
+	if err := godotenv.Load(); err != nil {
+		return fmt.Errorf(".env file not found with pushover details")
+	}
+	pc, err := newPushoverController(os.Getenv("PUSHOVER_USER"), os.Getenv("PUSHOVER_LOXONE_APP_TOKEN"))
+	if err != nil {
+		return err
+	}
+	defer pc.close()
+
+	r := &routes{webApp: webApp, mc: mc, pc: pc}
 	r.setup()
 
 	port := ctx.Int("port")

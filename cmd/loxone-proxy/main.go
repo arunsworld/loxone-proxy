@@ -11,7 +11,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-var appName = "loxone proxy test"
+var appName = "loxone proxy"
 
 func main() {
 	app := &cli.App{

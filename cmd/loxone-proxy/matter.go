@@ -75,6 +75,7 @@ func (mc *matterController) processQueue(ctx context.Context) {
 		select {
 		case <-ctx.Done():
 			log.Debug().Msg("matterController processQueue terminating")
+			return
 		case job := <-mc.jobQueue:
 			select {
 			case <-mc.devicesReady:
@@ -83,6 +84,7 @@ func (mc *matterController) processQueue(ctx context.Context) {
 				}
 			case <-ctx.Done():
 				log.Debug().Msg("matterController processQueue terminating with a job in hand but devices not yet ready")
+				return
 			}
 		}
 	}

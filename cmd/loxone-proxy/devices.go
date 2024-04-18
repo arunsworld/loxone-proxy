@@ -5,3 +5,9 @@ var sittingRoomLight01 = device{
 	deviceID: 500,
 	deviceIP: "192.168.1.19",
 }
+
+var doorbellChime = device{
+	name:     "Doorbell Chime",
+	deviceID: 501,
+	deviceIP: "192.168.1.42",
+}

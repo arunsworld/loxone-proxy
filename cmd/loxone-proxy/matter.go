@@ -197,7 +197,9 @@ func (mc *matterController) trySwitchingLights(secureChannel *gomat.SecureChanne
 		symbols.CLUSTER_ID_OnOff,
 		command,
 		[]byte{}, false, uint16(rand.Intn(0xffff)))
-	secureChannel.Send(to_send)
+	if err := secureChannel.Send(to_send); err != nil {
+		return fmt.Errorf("error sending to channel: %w", err)
+	}
 
 	resp, err := secureChannel.Receive()
 	if err != nil {

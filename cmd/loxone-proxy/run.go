@@ -36,7 +36,7 @@ func run(ctx *cli.Context) error {
 	}
 	defer pc.close()
 
-	r := &routes{webApp: webApp, mc: mc, pc: pc}
+	r := &routes{webApp: webApp, mc: mc, pc: pc, nc: nodeRedClient{}}
 	r.setup()
 
 	port := ctx.Int("port")

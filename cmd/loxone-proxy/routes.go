@@ -11,6 +11,7 @@ type routes struct {
 	webApp *fiber.App
 	mc     *matterController
 	pc     *pushoverController
+	nc     nodeRedClient
 }
 
 func (r *routes) setup() {
@@ -32,9 +33,23 @@ func (r *routes) lightsOff(c *fiber.Ctx) error {
 	room := string(c.Body())
 	log.Info().Str("room", room).Msg("lights off...")
 	switch room {
+	case "livingRoom":
 	case "sittingRoom":
 		r.mc.switchLightsOff(sittingRoomLight01)
-		// r.pc.send("Sitting room lights turned off")
+		if err := r.nc.turnOff("sitting-room-lady"); err != nil {
+			log.Printf("err turning off sitting-room-lady: %v", err)
+			return err
+		} else {
+			log.Printf("turned off sitting-room-lady")
+		}
+	case "diningRoom":
+		if err := r.nc.turnOff("dining-room-left"); err != nil {
+			log.Printf("err turning off dining-room-left: %v", err)
+			return err
+		} else {
+			log.Printf("turned dining-room-lef on")
+		}
+	case "theDen":
 	case "doorbellChime":
 		r.mc.switchLightsOff(doorbellChime)
 	}
@@ -45,9 +60,23 @@ func (r *routes) lightsOn(c *fiber.Ctx) error {
 	room := string(c.Body())
 	log.Info().Str("room", room).Msg("lights on...")
 	switch room {
+	case "livingRoom":
 	case "sittingRoom":
 		r.mc.switchLightsOn(sittingRoomLight01)
-		// r.pc.send("Sitting room lights turned on")
+		if err := r.nc.turnOn("sitting-room-lady"); err != nil {
+			log.Printf("err turning on sitting-room-lady: %v", err)
+			return err
+		} else {
+			log.Printf("turned on sitting-room-lady")
+		}
+	case "diningRoom":
+		if err := r.nc.turnOn("dining-room-left"); err != nil {
+			log.Printf("err turning on dining-room-left: %v", err)
+			return err
+		} else {
+			log.Printf("turned dining-room-lef on")
+		}
+	case "theDen":
 	case "doorbellChime":
 		r.mc.switchLightsOn(doorbellChime)
 		r.pc.send("Someone rang the doorbell")

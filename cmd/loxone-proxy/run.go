@@ -36,7 +36,16 @@ func run(ctx *cli.Context) error {
 	}
 	defer pc.close()
 
-	r := &routes{webApp: webApp, mc: mc, pc: pc, nc: nodeRedClient{}}
+	rpi := ctx.String("rpi")
+	var nodeEndPointURL string
+	if rpi == "" {
+		log.Warn().Msg("RPI hostname not set, defaulting")
+		nodeEndPointURL = "http://192.168.1.62:1880"
+	} else {
+		log.Debug().Str("rpi", rpi).Msg("initializing Node-RED client")
+		nodeEndPointURL = fmt.Sprintf("http://%s:1880", rpi)
+	}
+	r := &routes{webApp: webApp, mc: mc, pc: pc, nc: nodeRedClient{nodeEndPointURL: nodeEndPointURL}}
 	r.setup()
 
 	port := ctx.Int("port")

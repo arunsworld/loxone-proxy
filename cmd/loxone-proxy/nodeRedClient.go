@@ -6,12 +6,12 @@ import (
 	"net/url"
 )
 
-const nodeEndPointURL = "http://192.168.1.62:1880"
-
-type nodeRedClient struct{}
+type nodeRedClient struct {
+	nodeEndPointURL string
+}
 
 func (client nodeRedClient) turnOn(room string) error {
-	roomEndPoint, err := url.JoinPath(nodeEndPointURL, room)
+	roomEndPoint, err := url.JoinPath(client.nodeEndPointURL, room)
 	if err != nil {
 		return err
 	}
@@ -21,7 +21,7 @@ func (client nodeRedClient) turnOn(room string) error {
 }
 
 func (client nodeRedClient) turnOff(room string) error {
-	roomEndPoint, err := url.JoinPath(nodeEndPointURL, room)
+	roomEndPoint, err := url.JoinPath(client.nodeEndPointURL, room)
 	if err != nil {
 		return err
 	}

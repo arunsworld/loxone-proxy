@@ -48,5 +48,6 @@ func createFlags() []cli.Flag {
 		&cli.StringFlag{Name: "hostname", Usage: "hostname (blank OK, or localhost, or IP address)", Value: "", EnvVars: []string{"HOST"}},
 		&cli.IntFlag{Name: "port", Value: 6160, EnvVars: []string{"PORT"}},
 		&cli.BoolFlag{Name: "debug", Usage: "turn on debug mode", Aliases: []string{"d"}, EnvVars: []string{"DEBUG"}},
+		&cli.StringFlag{Name: "rpi", Usage: "rpi hostname", Value: "", EnvVars: []string{"RPI"}},
 	}
 }
